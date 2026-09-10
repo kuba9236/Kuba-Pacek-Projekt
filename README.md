@@ -1,2 +1,4 @@
 # Kuba-Pacek-Projekt
-Sklep z lego, pokazuje dostepne zestawy lego, poszczegolne kategorie i zawiera skrypt dodajacy wybrany zestaw do koszytka, logowanie do konta uzytkownika i dodanie do ulubionych
+Moim projektem jest sklep internetowy z zestawami LEGO. Na stronie można zobaczyć dostępne zestawy LEGO, ich ceny, zdjęcia oraz informacje o produktach. Zestawy są podzielone na różne kategorie, dzięki czemu łatwiej znaleźć konkretny produkt.
+Na stronie znajduje się również koszyk. Za pomocą specjalnego skryptu można wybrać zestaw LEGO i dodać go do koszyka. Użytkownik może w ten sposób zebrać kilka produktów, które chciałby kupić.
+Sklep posiada także możliwość założenia i zalogowania się na konto użytkownika. Po zalogowaniu można korzystać z dodatkowych funkcji, między innymi dodawać wybrane zestawy do ulubionych. Dzięki temu można łatwo znaleźć produkty, które wcześniej nas zainteresowały.
