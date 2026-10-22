@@ -1,51 +1,119 @@
 const products = [
     {
         id: 1,
-        name: "LEGO Technic Ferrari",
-        category: "Technic",
-        price: 799,
-        image: "https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&w=600&q=80"
+        name: "Zamek Hogwart™ i błonia",
+        category: "Harry Potter",
+        price: 729.99 ,
+        image: "hpdwa.png"
     },
 
     {
         id: 2,
-        name: "LEGO Star Wars",
-        category: "Star Wars",
-        price: 649,
-        image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80"
+        name: "Dom Luny Lovegood",
+        category: "Harry Potter",
+        price: 419.99,
+        image: "hpcztery.png"
     },
 
     {
         id: 3,
-        name: "LEGO City Police",
-        category: "City",
+        name: "Wolny skrzat Zgredek",
+        category: "Harry Potter",
         price: 249,
-        image: "https://images.unsplash.com/photo-1607453998774-d533f65dac99?auto=format&fit=crop&w=600&q=80"
+        image: "hptrzy.png"
     },
 
     {
         id: 4,
-        name: "LEGO Harry Potter",
+        name: "Nora edycja kolekcjonerska",
         category: "Harry Potter",
-        price: 499,
-        image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=600&q=80"
+        price: 1129.99,
+        image: "hpjeden.png"
     },
 
     {
         id: 5,
-        name: "LEGO Technic Bugatti",
-        category: "Technic",
-        price: 1299,
-        image: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=600&q=80"
+        name: "Zamek Hogwart™ Ceremonia przydziału",
+        category: "Harry Potter",
+        price: 61.99,
+        image: "hppiec.png"
     },
 
     {
         id: 6,
-        name: "LEGO City Straż Pożarna",
-        category: "City",
-        price: 199,
-        image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=600&q=80"
-    }
+        name: "Bukiet różowych róż",
+        category: "Botanicals",
+        price: 249.99,
+        image: "kwiatyjeden.png"
+    },
+
+    {
+        id: 7,
+        name: "Wiszące epipremnum złociste",
+        category: "Botanicals",
+        price: 249.99,
+        image: "kwiatydwa.png"
+    },
+
+    {
+        id: 8,
+        name: "Mała orchidea",
+        category: "Botanicals",
+        price: 124.99,
+        image: "kwiatytrzy.png"
+    },
+
+     {
+        id: 9,
+        name: "Małe drzewka bonsai",
+        category: "Botanicals",
+        price: 249.99,
+        image: "kwiatycztery.png"
+    },
+
+    {
+        id: 10,
+        name: "Grzyby leśne",
+        category: "Botanicals",
+        price: 239.99,
+        image: "kwiatypiec.png"
+    },
+
+     {
+        id: 11,
+        name: "Panorama uniwersum Marvela",
+        category: "MARVEL",
+        price: 429.99,
+        image: "marveljeden.png"
+    },
+
+    {
+        id: 12,
+        name: "Avengers: Doomsday Nowa Wieża Avengersów",
+        category: "MARVEL",
+        price: 469.99,
+        image: "marveldwa.png"
+    },
+
+    {
+        id: 13,
+        name: "X-Men: Instytut Xaviera",
+        category: "MARVEL",
+        price: 1399.99,
+        image: "marveltzy.png"
+    },
+
+    {
+        id: 14,
+        name: "Logo MARVEL z minifigurkami",
+        category: "MARVEL",
+        price: 439.99,
+        image: "marvelpiec.png"
+    },
+
+    
+    
+
 ];
 
 
