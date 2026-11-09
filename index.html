@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrickStore - Sklep LEGO</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3-naprawa">
 </head>
 <body>
 <header>
@@ -12,17 +12,31 @@
     <nav><a href="#produkty">Produkty</a><a href="#ulubione">Ulubione</a><a href="#konto">Konto</a></nav>
     <div class="header-icons"><button id="accountBtn">👤 Konto</button><button id="cartBtn">🛒 Koszyk <span id="cartCount">0</span></button></div>
 </header>
-<section class="hero"><h1>Znajdź swój wymarzony zestaw LEGO</h1><p>Najciekawsze zestawy LEGO w jednym miejscu.</p><a href="#produkty" class="hero-btn">Zobacz produkty</a></section>
+<section class="hero"><div class="hero-content"><span class="hero-eyebrow">✦ ŚWIAT KREATYWNEJ ZABAWY</span><h1>Buduj historie.<br><em>Odkrywaj więcej.</em></h1><p>Wyjątkowe zestawy LEGO, które rozbudzają wyobraźnię. Znajdź swój następny ulubiony model.</p><a href="#produkty" class="hero-btn">Odkryj kolekcję <span aria-hidden="true">↗</span></a><div class="hero-micro">★ Starannie wybrane zestawy &nbsp; · &nbsp; Radość z budowania</div></div></section><div class="benefits"><div><span class="benefit-icon">✦</span><span><strong>Wyjątkowa kolekcja</strong><small>Zestawy na każdą okazję</small></span></div><div><span class="benefit-icon">▣</span><span><strong>Bezpieczne zakupy</strong><small>Przejrzysty proces zamówienia</small></span></div><div><span class="benefit-icon">♡</span><span><strong>Twoje ulubione</strong><small>Zapisuj wymarzone modele</small></span></div></div>
 <main>
     <section class="controls"><input type="search" id="searchInput" placeholder="Szukaj zestawu LEGO..." aria-label="Szukaj zestawu LEGO"><div class="categories" id="categoriesContainer"><button class="category active" data-category="Wszystkie">Wszystkie</button></div></section>
-    <section id="produkty"><h2>Dostępne zestawy</h2><p id="productsStatus" class="status">Ładowanie produktów…</p><div id="productsContainer" class="products-container"></div></section>
+    <section id="produkty"><div class="section-heading"><div><span class="section-kicker">ODKRYJ BRICKSTORE</span><h2>Wybierz coś dla siebie<span class="heading-dot">.</span></h2></div><p>Od kultowych budowli po niezwykłe przygody — znajdź zestaw, który Cię zachwyci.</p></div><p id="productsStatus" class="status">Ładowanie produktów…</p><div id="productsContainer" class="products-container"></div></section>
     <section id="ulubione" class="favorites-section"><h2>❤️ Ulubione zestawy</h2><p id="favoritesStatus" class="status">Zaloguj się, aby zobaczyć ulubione zestawy.</p><div id="favoritesContainer" class="products-container"></div></section>
 </main>
-<aside id="cart" class="side-panel" aria-label="Koszyk"><div class="panel-header"><h2>🛒 Twój koszyk</h2><button class="closeBtn" id="closeCart" aria-label="Zamknij koszyk">✕</button></div><div id="cartItems"></div><div class="cart-footer"><h3>Razem: <span id="cartTotal">0,00 zł</span></h3><p class="status">Koszyk jest przechowywany w tej przeglądarce. Zamówienia nie są jeszcze wysyłane do bazy.</p></div></aside>
+<footer class="site-footer"><div class="footer-inner"><div><div class="logo">BRICK<span>STORE</span></div><p>Małe klocki. Wielkie możliwości.</p></div><div><strong>Odkrywaj</strong><a href="#produkty">Wszystkie zestawy</a><a href="#ulubione">Ulubione</a></div><div><strong>Twój sklep</strong><a href="#konto" id="footerAccountLink">Konto klienta</a><a href="#produkty">Przejdź do zakupów</a></div></div><div class="footer-bottom">© 2026 BrickStore · Projekt demonstracyjny, niezależny od LEGO Group.</div></footer>
+<aside id="cart" class="side-panel" aria-label="Koszyk"><div class="panel-header"><h2>🛒 Twój koszyk</h2><button class="closeBtn" id="closeCart" aria-label="Zamknij koszyk">✕</button></div><div id="cartItems"></div><div class="cart-footer"><h3>Razem: <span id="cartTotal">0,00 zł</span></h3><button type="button" class="checkout-btn" id="checkoutBtn">Przejdź do zamówienia</button></div></aside>
 <aside id="accountPanel" class="side-panel" aria-label="Konto użytkownika"><div class="panel-header"><h2>👤 Konto użytkownika</h2><button class="closeBtn" id="closeAccount" aria-label="Zamknij konto">✕</button></div>
     <div id="loginForm"><h3>Zaloguj się</h3><form id="loginFields"><input type="text" id="loginUsername" placeholder="Nazwa użytkownika" autocomplete="username" required><input type="password" id="loginPassword" placeholder="Hasło" autocomplete="current-password" required><button type="submit">Zaloguj się</button></form><p>Nie masz konta? <button type="button" id="showRegister" class="text-button">Załóż konto</button></p></div>
     <div id="registerForm" class="hidden"><h3>Załóż konto</h3><form id="registerFields"><input type="text" id="registerUsername" placeholder="Nazwa użytkownika (min. 3 znaki)" autocomplete="username" minlength="3" maxlength="100" required><input type="password" id="registerPassword" placeholder="Hasło (min. 8 znaków)" autocomplete="new-password" minlength="8" required><button type="submit">Zarejestruj się</button></form><p>Masz już konto? <button type="button" id="showLogin" class="text-button">Zaloguj się</button></p></div>
     <div id="userPanel" class="hidden"><h3>Witaj, <span id="currentUser"></span>!</h3><p>Twoje ulubione zestawy są zapisane na koncie.</p><button id="logoutBtn">Wyloguj się</button></div><p id="accountMessage" class="status" role="status"></p>
 </aside>
-<div id="overlay"></div><script src="main.js"></script>
+<section id="checkoutModal" class="checkout-modal hidden" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+ <div class="checkout-box"><div class="panel-header"><h2 id="checkoutTitle">📦 Dane do zamówienia</h2><button type="button" id="closeCheckout" class="closeBtn" aria-label="Zamknij">✕</button></div>
+ <form id="checkoutForm">
+ <label>Imię i nazwisko <input name="customer_name" required minlength="3" maxlength="150" autocomplete="name"></label>
+ <label>E-mail <input type="email" name="email" required maxlength="255" autocomplete="email"></label>
+ <label>Telefon (opcjonalnie) <input type="tel" name="phone" maxlength="40" autocomplete="tel"></label>
+ <label>Ulica, numer domu i mieszkania <input name="delivery_address" required minlength="5" maxlength="255" autocomplete="street-address"></label>
+ <div class="checkout-grid"><label>Kod pocztowy <input name="delivery_postal_code" required pattern="[0-9]{2}-[0-9]{3}" placeholder="00-000" autocomplete="postal-code"></label><label>Miasto <input name="delivery_city" required minlength="2" maxlength="100" autocomplete="address-level2"></label></div>
+ <label>Metoda płatności <select name="payment_method" required><option value="pobranie">Za pobraniem (przy odbiorze)</option><option value="przelew">Przelew tradycyjny (dane płatności od sprzedawcy)</option></select></label>
+ <p class="status">To demonstracyjny sklep: nie pobiera płatności online ani nie organizuje wysyłki automatycznie.</p>
+ <div id="checkoutSummary" class="checkout-summary"></div><p id="checkoutMessage" class="status" role="alert"></p>
+ <button class="checkout-btn" id="placeOrderBtn" type="submit">Potwierdź zamówienie</button>
+ </form><div id="orderSuccess" class="hidden" role="status"></div></div>
+ </section><div id="overlay"></div><script src="main.js?v=3-naprawa"></script>
 </body></html>

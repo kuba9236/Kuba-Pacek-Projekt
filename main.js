@@ -19,7 +19,8 @@ let products = [];
 let favorites = [];
 let currentUser = null;
 let activeCategory = 'Wszystkie';
-let cartData = JSON.parse(localStorage.getItem('brickstore_cart') || '[]');
+let cartData = [];
+try { const saved = JSON.parse(localStorage.getItem('brickstore_cart') || '[]'); cartData = Array.isArray(saved) ? saved.filter(x => x && Number.isInteger(Number(x.id)) && Number(x.quantity)>0) : []; } catch (e) { console.warn('Uszkodzony zapis koszyka',e); }
 
 async function api(path, options = {}) {
     const response = await fetch(`${API}/${path}`, {
@@ -49,11 +50,11 @@ function productCard(product, favoriteMode = false) {
     const id = Number(product.id);
     const isFavorite = favorites.some(item => Number(item.id) === id);
     return `<article class="product-card">
-        <img src="${escapeHtml(imageUrl(product.image))}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Brak+zdjecia'">
+        <a href="product.html?id=${id}" class="product-photo-link" aria-label="Zobacz szczegóły: ${escapeHtml(product.name)}"><img src="${escapeHtml(imageUrl(product.image))}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Brak+zdjecia'"></a>
         <div class="product-info"><span class="product-category">${escapeHtml(product.category || '')}</span>
-        <h3>${escapeHtml(product.name)}</h3><p class="description">${escapeHtml(product.description || '')}</p>
+        <h3><a class="product-title-link" href="product.html?id=${id}">${escapeHtml(product.name)}</a></h3><p class="description">${escapeHtml(product.description || '')}</p>
         <p class="stock">Dostępne sztuki: ${Number(product.stock)}</p><p class="price">${money(product.price)}</p>
-        <div class="product-buttons"><button class="add-cart" data-add="${id}" ${Number(product.stock) < 1 ? 'disabled' : ''}>Dodaj do koszyka</button>
+        <a class="details-link" href="product.html?id=${id}">Zobacz szczegóły →</a><div class="product-buttons"><button class="add-cart" data-add="${id}" ${Number(product.stock) < 1 ? 'disabled' : ''}>Dodaj do koszyka</button>
         <button class="favorite-btn ${isFavorite ? 'is-favorite' : ''}" data-favorite="${id}" title="${isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}" aria-label="${isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}">${isFavorite ? '❤️' : '♡'}</button></div></div></article>`;
 }
 function renderProducts() {
@@ -83,19 +84,25 @@ async function loadFavorites() {
     renderProducts();
 }
 async function loadStore() {
+    // Produkty wczytujemy niezależnie od logowania i kategorii.
     try {
-        const [productData, categoryData, authData] = await Promise.all([
-            api('products.php'), api('categories.php'), api('auth.php?action=me')
-        ]);
-        products = productData.products || [];
-        currentUser = authData.user;
-        renderCategories(categoryData.categories || []);
+        const productData = await api('products.php');
+        products = Array.isArray(productData.products) ? productData.products : [];
         renderProducts();
+    } catch (error) {
+        productsStatus.textContent = `Nie udało się pobrać produktów: ${error.message}. Sprawdź http://localhost/brickstore/api/products.php oraz ustawienia api/db.php.`;
+        console.error('Błąd produktów:', error);
+    }
+    try {
+        const categoryData = await api('categories.php');
+        renderCategories(categoryData.categories || []);
+    } catch (error) { console.warn('Kategorie nie zostały pobrane:', error); }
+    try {
+        const authData = await api('auth.php?action=me');
+        currentUser = authData.user || null;
         updateAccountUI();
         if (currentUser) await loadFavorites();
-    } catch (error) {
-        productsStatus.textContent = `${error.message} Uruchom projekt przez serwer PHP i sprawdź api/db.php.`;
-    }
+    } catch (error) { console.warn('Konto nie zostało pobrane:', error); }
     renderCart();
 }
 function updateAccountUI() {
@@ -114,7 +121,7 @@ function closePanels() {
     cart.classList.remove('open'); accountPanel.classList.remove('open'); overlay.classList.remove('show');
 }
 function renderCart() {
-    localStorage.setItem('brickstore_cart', JSON.stringify(cartData));
+    try { localStorage.setItem('brickstore_cart', JSON.stringify(cartData)); } catch (e) { console.warn('Nie można zapisać koszyka:',e); }
     cartCount.textContent = cartData.reduce((sum, item) => sum + item.quantity, 0);
     cartItems.innerHTML = cartData.length ? cartData.map(item => `<div class="cart-item"><img src="${escapeHtml(imageUrl(item.image))}" alt=""><div class="cart-info"><strong>${escapeHtml(item.name)}</strong><p>${money(item.price)} × ${item.quantity}</p><div class="quantity-controls"><button data-quantity="${item.id}" data-change="-1" aria-label="Zmniejsz ilość">−</button><button data-quantity="${item.id}" data-change="1" aria-label="Zwiększ ilość">+</button><button class="remove-item" data-remove="${item.id}">Usuń</button></div></div></div>`).join('') : '<p>Twój koszyk jest pusty.</p>';
     cartTotal.textContent = money(cartData.reduce((sum, item) => sum + item.price * item.quantity, 0));
@@ -163,12 +170,41 @@ document.addEventListener('click', event => {
         renderCart();
     }
 });
+const checkoutModal = document.getElementById('checkoutModal');
+const checkoutForm = document.getElementById('checkoutForm');
+function closeCheckout() { checkoutModal.classList.add('hidden'); overlay.classList.remove('show'); }
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+    if (!cartData.length) { alert('Najpierw dodaj produkt do koszyka.'); return; }
+    closePanels(); checkoutModal.classList.remove('hidden'); overlay.classList.add('show');
+    checkoutForm.classList.remove('hidden'); document.getElementById('orderSuccess').classList.add('hidden');
+    document.getElementById('checkoutMessage').textContent = '';
+    document.getElementById('checkoutSummary').textContent = `Produkty: ${cartData.reduce((n,p)=>n+p.quantity,0)} szt. | Suma orientacyjna: ${money(cartData.reduce((n,p)=>n+p.quantity*p.price,0))}. Ostateczna cena zostanie wyliczona na serwerze.`;
+});
+document.getElementById('closeCheckout').addEventListener('click', closeCheckout);
+checkoutForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const button = document.getElementById('placeOrderBtn');
+    const message = document.getElementById('checkoutMessage');
+    button.disabled = true; message.textContent = 'Zapisywanie zamówienia…';
+    try {
+        const fields = Object.fromEntries(new FormData(checkoutForm).entries());
+        const result = await api('checkout.php', { method:'POST', body:JSON.stringify({...fields, items:cartData.map(p=>({id:p.id,quantity:p.quantity}))}) });
+        cartData = []; renderCart();
+        checkoutForm.classList.add('hidden');
+        const success = document.getElementById('orderSuccess');
+        success.classList.remove('hidden');
+        success.textContent = `Dziękujemy! Zamówienie nr ${result.order_id} zapisano w bazie. Kwota: ${money(result.total)}. Status: ${result.status}. ${fields.payment_method === 'przelew' ? 'Skontaktuj się ze sprzedawcą w celu otrzymania danych do przelewu. Nie wysyłaj pieniędzy bez potwierdzenia.' : 'Płatność za pobraniem przy odbiorze.'}`;
+        checkoutForm.reset();
+        try { const fresh=await api('products.php'); products=fresh.products||[]; renderProducts(); } catch {}
+    } catch (error) { message.textContent = error.message; }
+    finally { button.disabled = false; }
+});
 document.getElementById('cartBtn').addEventListener('click', () => showPanel(cart));
 document.getElementById('accountBtn').addEventListener('click', () => showPanel(accountPanel));
 document.getElementById('closeCart').addEventListener('click', closePanels);
 document.getElementById('closeAccount').addEventListener('click', closePanels);
-overlay.addEventListener('click', closePanels);
-document.addEventListener('keydown', event => { if (event.key === 'Escape') closePanels(); });
+overlay.addEventListener('click', () => { closePanels(); closeCheckout(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') { closePanels(); closeCheckout(); } });
 document.getElementById('showRegister').addEventListener('click', () => { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.remove('hidden'); accountMessage.textContent = ''; });
 document.getElementById('showLogin').addEventListener('click', () => { document.getElementById('registerForm').classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); accountMessage.textContent = ''; });
 document.getElementById('loginFields').addEventListener('submit', async event => {
@@ -186,3 +222,6 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     catch (error) { accountMessage.textContent = error.message; }
 });
 loadStore();
+
+// Skrót do konta w stopce
+document.getElementById("footerAccountLink")?.addEventListener("click", function(e){ e.preventDefault(); document.getElementById("accountBtn")?.click(); });
